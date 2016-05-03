@@ -4,6 +4,7 @@ using System.Collections;
 public class PieceManager : MonoBehaviour {
 
 	public float width = 2.0f;
+	public float height;
 	public WaitForSeconds moveWait = new WaitForSeconds(1.0f);
 
 	// Use this for initialization
