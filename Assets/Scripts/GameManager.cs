@@ -68,9 +68,11 @@ public class GameManager : MonoBehaviour {
 
 		float spawnXPoint = spawnXPoints[Random.Range(0, spawnXPoints.Length)];
 
+		float spawnYPoint = spawnTransform.position.y + pieceManager.height / 2.0f;
+
 		Quaternion rotation = Quaternion.Euler (new Vector3 (0, 90, 0));
 
-		activePiece = Instantiate (piece, new Vector3 (spawnXPoint, spawnTransform.position.y, 0f), rotation) as GameObject;
+		activePiece = Instantiate (piece, new Vector3 (spawnXPoint, spawnYPoint, 0f), rotation) as GameObject;
 		pieceManager = activePiece.GetComponent<PieceManager>();
 		pieceManager.moveWait = moveWait;
 		pieceManager.BeginMotion ();
