@@ -18,43 +18,50 @@ public class GameManager : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 		width = maxX - minX;
 		moveWait = new WaitForSeconds(initialWait);
 		startWait = new WaitForSeconds (0f);
 		StartCoroutine (GameLoop ());
 	}
 
-	GameObject RandomPiece () {
+	GameObject RandomPiece () 
+	{
 		return pieces [Random.Range (0, pieces.Length)];
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+	{
 	
 	}
 
-	IEnumerator GameLoop() {
+	IEnumerator GameLoop() 
+	{
 	
 		yield return StartCoroutine (RoundStarting ());
 		yield return StartCoroutine (RoundPlaying ());
 	
 	}
 
-	IEnumerator RoundStarting () {
+	IEnumerator RoundStarting () 
+	{
 		yield return startWait;
 	}
 
-	IEnumerator RoundPlaying () {
+	IEnumerator RoundPlaying () 
+	{
 		while (!lost) {
 			if (activePiece == null) {
-				Spawn (RandomPiece ());
+				SpawnRandom ();
 			}
 			yield return null;
 		}
 	}
 
-	void Spawn (GameObject piece) {
+	void Spawn (GameObject piece) 
+	{
 		PieceManager pieceManager = piece.GetComponent<PieceManager>();
 		float minXSpawn = minX + pieceManager.width / 2.0f;
 
@@ -74,7 +81,19 @@ public class GameManager : MonoBehaviour {
 
 		activePiece = Instantiate (piece, new Vector3 (spawnXPoint, spawnYPoint, 0f), rotation) as GameObject;
 		pieceManager = activePiece.GetComponent<PieceManager>();
+		pieceManager.gameManager = this;
 		pieceManager.moveWait = moveWait;
 		pieceManager.BeginMotion ();
+	}
+
+	void SpawnRandom ()
+	{
+		Spawn (RandomPiece ());
+	}
+
+	public void HandlePieceStationary (GameObject piece) 
+	{
+		Debug.Log ("stopped moving");
+		SpawnRandom ();
 	}
 }
