@@ -34,10 +34,21 @@ public class GameManager : MonoBehaviour {
 		return pieces [Random.Range (0, pieces.Length)];
 	}
 	
-	// Update is called once per frame
 	void Update () 
 	{
-	
+		float rotation = 0;
+		bool clockwiseRotate = Input.GetButtonDown ("Fire1");
+		if (clockwiseRotate) {
+			rotation += 1.0f;
+		}
+
+		if (rotation != 0 && activePiece != null) {
+			PieceManager activePieceManager = activePiece.GetComponent<PieceManager> ();
+			if (activePieceManager.stationary) {
+				return;
+			}
+			activePieceManager.Rotate (rotation);
+		}
 	}
 
 	IEnumerator GameLoop() 
@@ -80,7 +91,7 @@ public class GameManager : MonoBehaviour {
 
 		float spawnYPoint = spawnTransform.position.y + pieceManager.height / 2.0f;
 
-		Quaternion rotation = Quaternion.Euler (new Vector3 (0, 90, 0));
+		Quaternion rotation = Quaternion.Euler (new Vector3 (0f, 90f, 0f));
 
 		activePiece = Instantiate (piece, new Vector3 (spawnXPoint, spawnYPoint, 0f), rotation) as GameObject;
 		pieceManager = activePiece.GetComponent<PieceManager>();
