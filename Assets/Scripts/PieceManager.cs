@@ -58,13 +58,28 @@ public class PieceManager : MonoBehaviour {
 	{
 		inverted = !inverted;
 		transform.Rotate (90.0f * direction, 0, 0);
+		Vector3 newPosition = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
+	
 		if (height % 2 != width % 2) {
-			Vector3 newPosition = new Vector3 (transform.position.x - 0.5f, transform.position.y - 0.5f, transform.position.z);
+			newPosition.x -= 0.5f;
+			newPosition.y -= 0.5f;
 			if (inverted) {
 				newPosition.x += 1.0f;
 			}
-			transform.position = newPosition;
 		}
+		float dimension = width;
+		if (inverted) {
+			dimension = height;
+		}
+		if (newPosition.x + dimension / 2.0f > gameManager.maxX) {
+			newPosition.x -= 1.0f;
+		}
+		if (newPosition.x - dimension / 2.0f < gameManager.minX) {
+			newPosition.x += 1.0f;
+		}
+
+		transform.position = newPosition;
+
 
 	}
 
