@@ -7,13 +7,15 @@ public class GameManager : MonoBehaviour {
 	public float fallStep = 4.0f;
 	public float minX = -5.0f;
 	public float maxX = 5.0f;
-	public float initialWait;
+	public float initialMoveWait; // delay between an individual piece's movements
+	public float initialPieceWait; // delay between stopping of one piece to when the next piece spawns
 	public Transform spawnTransform;
 
 	private float width;
 	private GameObject activePiece;
 	private WaitForSeconds startWait;
 	private WaitForSeconds moveWait;
+	private WaitForSeconds pieceWait;
 	private bool lost = false;
 
 
@@ -21,7 +23,8 @@ public class GameManager : MonoBehaviour {
 	void Start () 
 	{
 		width = maxX - minX;
-		moveWait = new WaitForSeconds(initialWait);
+		moveWait = new WaitForSeconds(initialMoveWait);
+		pieceWait = new WaitForSeconds (initialPieceWait);
 		startWait = new WaitForSeconds (0f);
 		StartCoroutine (GameLoop ());
 	}
@@ -91,9 +94,9 @@ public class GameManager : MonoBehaviour {
 		Spawn (RandomPiece ());
 	}
 
-	public void HandlePieceStationary (GameObject piece) 
+	public IEnumerator HandlePieceStationary (GameObject piece) 
 	{
-		Debug.Log ("stopped moving");
+		yield return pieceWait;
 		SpawnRandom ();
 	}
 }

@@ -6,6 +6,7 @@ public class PieceManager : MonoBehaviour {
 	public float width = 2.0f;
 	public float height;
 	public WaitForSeconds moveWait = new WaitForSeconds(1.0f);
+
 	public GameManager gameManager;
 
 	[HideInInspector] public bool Stationary
@@ -19,7 +20,7 @@ public class PieceManager : MonoBehaviour {
 			bool previous = stationary;
 			stationary = value;
 			if (!previous && value && gameManager != null) {
-				gameManager.HandlePieceStationary (gameObject);
+				StartCoroutine (gameManager.HandlePieceStationary (gameObject));
 			}
 		}
 	}
