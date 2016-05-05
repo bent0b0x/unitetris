@@ -6,6 +6,8 @@ public class PieceManager : MonoBehaviour {
 	public float width = 2.0f;
 	public float height;
 	public WaitForSeconds moveWait = new WaitForSeconds(1.0f);
+	[HideInInspector] public bool stationary = true;
+
 
 	public GameManager gameManager;
 
@@ -27,15 +29,14 @@ public class PieceManager : MonoBehaviour {
 
 
 	private Rigidbody rb;
-	private bool stationary = true;
+	private bool inverted = false;
 
 
 	void Start () 
 	{
-		rb = gameObject.GetComponent<Rigidbody> ();}
-
-		void Update () {
+		rb = gameObject.GetComponent<Rigidbody> ();
 	}
+		
 
 	public void BeginMotion () 
 	{
@@ -51,6 +52,20 @@ public class PieceManager : MonoBehaviour {
 			transform.position = new Vector3 (transform.position.x, transform.position.y - 1, transform.position.z);
 			yield return Move ();
 		}
+	}
+
+	public void Rotate (float direction)
+	{
+		inverted = !inverted;
+		transform.Rotate (90.0f * direction, 0, 0);
+		if (height % 2 != width % 2) {
+			Vector3 newPosition = new Vector3 (transform.position.x - 0.5f, transform.position.y - 0.5f, transform.position.z);
+			if (inverted) {
+				newPosition.x += 1.0f;
+			}
+			transform.position = newPosition;
+		}
+
 	}
 
 	void OnTriggerEnter(Collider other) 
