@@ -80,6 +80,25 @@ public class PieceManager : MonoBehaviour {
 
 		transform.position = newPosition;
 
+	}
+
+	public void AttemptShift(float direction)
+	{
+		bool right = direction > 0;
+		if (inverted) {
+			if (transform.position.x + height / 2.0f >= gameManager.maxX && right ||
+				transform.position.x - height / 2.0f <= gameManager.minX && !right) {
+				return;
+			}
+		} else {
+			if (transform.position.x + width / 2.0f >= gameManager.maxX && right ||
+				transform.position.x - width / 2.0f <= gameManager.minX && !right) {
+				return;
+			}
+		}
+		Vector3 newPosition = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
+		newPosition.x += 1.0f * direction;
+		transform.position = newPosition;
 
 	}
 

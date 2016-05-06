@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class GameManager : MonoBehaviour {
@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
 	public float maxX = 5.0f;
 	public float initialMoveWait; // delay between an individual piece's movements
 	public float initialPieceWait; // delay between stopping of one piece to when the next piece spawns
+	public float shiftDelay; // delay between horizontal shifts
 	public Transform spawnTransform;
 
 	private float width;
@@ -17,7 +18,8 @@ public class GameManager : MonoBehaviour {
 	private WaitForSeconds moveWait;
 	private WaitForSeconds pieceWait;
 	private bool lost = false;
-
+	private float shiftTimer = 0f;
+	private bool attemptingShift = false;
 
 	// Use this for initialization
 	void Start () 
@@ -36,18 +38,33 @@ public class GameManager : MonoBehaviour {
 	
 	void Update () 
 	{
-		float rotation = 0;
-		bool clockwiseRotate = Input.GetButtonDown ("Fire1");
-		if (clockwiseRotate) {
-			rotation += 1.0f;
-		}
+		shiftTimer += Time.deltaTime;
 
-		if (rotation != 0 && activePiece != null) {
+		if (activePiece != null) {
 			PieceManager activePieceManager = activePiece.GetComponent<PieceManager> ();
 			if (activePieceManager.stationary) {
 				return;
 			}
-			activePieceManager.Rotate (rotation);
+			float rotation = 0;
+			bool clockwiseRotate = Input.GetButtonDown ("Fire1");
+			if (clockwiseRotate) {
+				rotation += 1.0f;
+			}
+
+			if (rotation != 0) {
+				activePieceManager.Rotate (rotation);
+			}
+
+			float horizontal = Input.GetAxisRaw ("Horizontal");
+			if (horizontal != 0) {
+				if (shiftTimer > shiftDelay || !attemptingShift) {
+					activePieceManager.AttemptShift (horizontal);
+					shiftTimer = 0f;
+				}
+				attemptingShift = true;
+			} else {
+				attemptingShift = false;
+			}
 		}
 	}
 
