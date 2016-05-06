@@ -6,6 +6,8 @@ public class PieceManager : MonoBehaviour {
 	public float width = 2.0f;
 	public float height;
 	public WaitForSeconds moveWait = new WaitForSeconds(1.0f);
+	[HideInInspector] public bool stationary = true;
+
 
 	public GameManager gameManager;
 
@@ -27,15 +29,14 @@ public class PieceManager : MonoBehaviour {
 
 
 	private Rigidbody rb;
-	private bool stationary = true;
+	private bool inverted = false;
 
 
 	void Start () 
 	{
-		rb = gameObject.GetComponent<Rigidbody> ();}
-
-		void Update () {
+		rb = gameObject.GetComponent<Rigidbody> ();
 	}
+		
 
 	public void BeginMotion () 
 	{
@@ -51,6 +52,53 @@ public class PieceManager : MonoBehaviour {
 			transform.position = new Vector3 (transform.position.x, transform.position.y - 1, transform.position.z);
 			yield return Move ();
 		}
+	}
+
+	public void Rotate (float direction)
+	{
+		inverted = !inverted;
+		transform.Rotate (90.0f * direction, 0, 0);
+		Vector3 newPosition = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
+	
+		if (height % 2 != width % 2) {
+			newPosition.x -= 0.5f;
+			newPosition.y -= 0.5f;
+			if (inverted) {
+				newPosition.x += 1.0f;
+			}
+		}
+		float dimension = width;
+		if (inverted) {
+			dimension = height;
+		}
+		if (newPosition.x + dimension / 2.0f > gameManager.maxX) {
+			newPosition.x -= 1.0f;
+		}
+		if (newPosition.x - dimension / 2.0f < gameManager.minX) {
+			newPosition.x += 1.0f;
+		}
+
+		transform.position = newPosition;
+
+	}
+
+	public void AttemptShift(float direction)
+	{
+		bool right = direction > 0;
+		if (inverted) {
+			if (transform.position.x + height / 2.0f >= gameManager.maxX && right ||
+				transform.position.x - height / 2.0f <= gameManager.minX && !right) {
+				return;
+			}
+		} else {
+			if (transform.position.x + width / 2.0f >= gameManager.maxX && right ||
+				transform.position.x - width / 2.0f <= gameManager.minX && !right) {
+				return;
+			}
+		}
+		Vector3 newPosition = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
+		newPosition.x += 1.0f * direction;
+		transform.position = newPosition;
 	}
 
 	void OnTriggerEnter(Collider other) 
