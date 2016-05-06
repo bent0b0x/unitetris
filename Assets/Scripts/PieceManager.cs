@@ -80,7 +80,6 @@ public class PieceManager : MonoBehaviour {
 
 		transform.position = newPosition;
 
-<<<<<<< HEAD
 	}
 
 	public void AttemptShift(float direction)
@@ -100,9 +99,7 @@ public class PieceManager : MonoBehaviour {
 		Vector3 newPosition = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
 		newPosition.x += 1.0f * direction;
 		transform.position = newPosition;
-=======
 
->>>>>>> master
 	}
 
 	void OnTriggerEnter(Collider other) 
