@@ -42,6 +42,9 @@ public class GameManager : MonoBehaviour {
 
 		if (activePiece != null) {
 			PieceManager activePieceManager = activePiece.GetComponent<PieceManager> ();
+			if (activePieceManager.stationary) {
+				return;
+			}
 			float rotation = 0;
 			bool clockwiseRotate = Input.GetButtonDown ("Fire1");
 			if (clockwiseRotate) {
@@ -49,9 +52,6 @@ public class GameManager : MonoBehaviour {
 			}
 
 			if (rotation != 0) {
-				if (activePieceManager.stationary) {
-					return;
-				}
 				activePieceManager.Rotate (rotation);
 			}
 
